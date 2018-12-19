@@ -17,7 +17,7 @@ const loadRouters = require('express-load-routers');
 
 const app = express();
 
-app.use(loadRoutes('./routes'));
+app.use(loadRouters('./routes'));
 ```
 
 ### Options
