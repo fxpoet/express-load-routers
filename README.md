@@ -33,7 +33,7 @@ loadRouters(directory, options);
 ```
 
 option         |  type | default | decription
----------------|-------|----------------------
+---------------|-------|---------|------------
 exclude        | Array | ['_*']  | This array contain match patterns that will excludes.
 
 
