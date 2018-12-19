@@ -2,12 +2,6 @@
 
 Load routers from specific folders for Express 4.x
 
-- [Install](#install)
-- [Usage](#usage)
-- [Options](#options)
-- [Router](#Router)
-- [License](#license)
-
 ## Install
 
 ```
