@@ -5,7 +5,7 @@ Load routers from specific folders for Express 4.x
 - [Install](#install)
 - [Usage](#usage)
 - [Options](#options)
-- [`Controller` declaration](#controller-declaration)
+- [Router](#Router)
 - [License](#license)
 
 ## Install
@@ -32,13 +32,12 @@ app.use(loadRoutes('./routes'));
 loadRouters(directory, options);
 ```
 
-option         |  type | default
----------------|-------|---------
-`exclude`      | Array | `['_*']`
+option         |  type | default | decription
+---------------|-------|----------------------
+exclude        | Array | ['_*']  | This array contain match patterns that will excludes.
 
-This array contain match patterns that will excludes.
 
-### `Controller` declaration
+### Router
 
 ex) routes/sample.js (http://localhost/sample/)
 ```js
