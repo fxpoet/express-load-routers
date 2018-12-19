@@ -1,0 +1,41 @@
+{
+  "name": "express-load-routers",
+  "version": "1.0.4",
+  "description": "Loads express 4.x routers from directory recursively",
+  "main": "index.js",
+
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:fxpoet/express-load-routers.git"
+  },
+  
+  "dependencies": {
+    "app-root-path": "^1.0.0",
+    "express": "^4.0.0"
+  },
+  
+  "keywords": [
+    "routes",
+    "express",
+    "dynamic",
+    "router"
+  ],
+
+  "author": { 
+  	"name": "Kiyoung Jung", 
+	  "email": "im@fxpoet.com" 
+  },
+
+  "license": "MIT",
+  
+  "bugs": {
+    "url": "https://github.com/fxpoet/express-load-routers/issues"
+  },
+
+  "homepage": "https://github.com/fxpoet/express-load-routers"
+
+}
