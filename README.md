@@ -39,7 +39,7 @@ exclude        | Array | ['_*']  | This array contain match patterns that will e
 
 ### Router
 
-ex) routes/sample.js (http://localhost/sample/)
+ex) routes/sample.js -> http://localhost/sample/
 ```js
 module.exports = router = require('express').Router();
 router.get('/', (req, res, next)=>{
@@ -47,8 +47,10 @@ router.get('/', (req, res, next)=>{
 });
 ```
 
-ex) routes/camel/index.js (http://localhost/camel/)
-ex) routes/one/two.js (http://localhost/one/two/three/)
+ex) routes/camel/index.js -> http://localhost/camel/
+
+ex) routes/one/two.js -> http://localhost/one/two/three/
+
 ```js
 module.exports = router = require('express').Router();
 router.get('/three', (req, res, next)=>{
