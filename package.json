@@ -1,6 +1,6 @@
 {
   "name": "express-load-routers",
-  "version": "1.0.4",
+  "version": "1.2.0",
   "description": "Loads express 4.x routers from directory recursively",
   "main": "index.js",
 
