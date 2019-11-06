@@ -6,23 +6,23 @@ let appRoot = require('app-root-path').toString();
 
 let router = express.Router();
 
-function getRouters(dirPath) {  
+function getRouters(dirPath) {
 
   let rootDir = resolve(dirPath);
   let foundFiles = [];
 
-  function walkDir(dir) {  
+  function walkDir(dir) {
     fs.readdirSync(dir).forEach(file => {
 
-      let fullPath = path.join(dir, file);     
-      
+      let fullPath = path.join(dir, file);
+
       if (fs.lstatSync(fullPath).isDirectory())
         walkDir(fullPath);
 
       else {
         if (file[0] != "_") {
           foundFiles.push(path.relative(rootDir, resolve(fullPath)));
-        }        
+        }
       }
 
     });
@@ -32,30 +32,39 @@ function getRouters(dirPath) {
   return foundFiles;
 }
 
-function convetSep(pathString) {
+function convertSep(pathString) {
   let re = new RegExp("\\\\", 'g');
   return pathString.replace(re, "/");
 }
-
 
 module.exports = function(routesPath) {
 
   let files = getRouters(routesPath);
   let importRoot = path.join(appRoot, routesPath);
-  
+  let indexRouters = {};
+
+  files.sort((item)=> (item.indexOf(path.sep+'index.js')<0) );
+
   for (let file of files) {
 
-    let fileInfo  = path.parse(file);        
-    fileInfo.dir  = convetSep(fileInfo.dir);
+    let fileInfo  = path.parse(file);
+    fileInfo.dir  = convertSep(fileInfo.dir);
 
-    let routePath = (fileInfo.name == "index") ? 
+    let routePath = (fileInfo.name == "index") ?
       fileInfo.dir :
-      fileInfo.dir + '/' + fileInfo.name;    
-    if (routePath[0] != "/") 
+      fileInfo.dir + '/' + fileInfo.name;
+
+    if (routePath[0] != "/")
       routePath = '/'+ routePath;
-  
-    router.use(routePath, require(importRoot+"/"+file));
+
+    if (indexRouters[fileInfo.dir]) {
+      indexRouters[fileInfo.dir].use('/'+fileInfo.name, require(importRoot+"/"+file));
+    } else {
+      let subRouter = require(importRoot+"/"+file);
+      indexRouters[fileInfo.dir] = subRouter;
+      router.use(routePath, subRouter);
+    }
+
   }
   return router;
 }
-   
