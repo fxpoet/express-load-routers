@@ -1,6 +1,6 @@
 {
   "name": "express-load-routers",
-  "version": "1.2.0",
+  "version": "1.5.0",
   "description": "Loads express 4.x routers from directory recursively",
   "main": "index.js",
 
@@ -12,12 +12,12 @@
     "type": "git",
     "url": "git@github.com:fxpoet/express-load-routers.git"
   },
-  
+
   "dependencies": {
     "app-root-path": "^1.0.0",
     "express": "^4.0.0"
   },
-  
+
   "keywords": [
     "routes",
     "express",
@@ -25,13 +25,13 @@
     "router"
   ],
 
-  "author": { 
-  	"name": "Kiyoung Jung", 
-	  "email": "im@fxpoet.com" 
+  "author": {
+  	"name": "Kiyoung Jung",
+	  "email": "im@fxpoet.com"
   },
 
   "license": "MIT",
-  
+
   "bugs": {
     "url": "https://github.com/fxpoet/express-load-routers/issues"
   },

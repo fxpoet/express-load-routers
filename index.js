@@ -6,6 +6,12 @@ let appRoot = require('app-root-path').toString();
 
 let router = express.Router();
 
+function convertSep(pathString) {
+  if (path.sep == "/") return pathString;
+  let re = new RegExp("\\\\", 'g');
+  return pathString.replace(re, "/");
+}
+
 function getRouters(dirPath) {
 
   let rootDir = resolve(dirPath);
@@ -13,7 +19,6 @@ function getRouters(dirPath) {
 
   function walkDir(dir) {
     fs.readdirSync(dir).forEach(file => {
-
       let fullPath = path.join(dir, file);
 
       if (fs.lstatSync(fullPath).isDirectory())
@@ -21,10 +26,9 @@ function getRouters(dirPath) {
 
       else {
         if (file[0] != "_") {
-          foundFiles.push(path.relative(rootDir, resolve(fullPath)));
+          foundFiles.push(  convertSep(path.relative(rootDir, resolve(fullPath))) );
         }
       }
-
     });
   }
 
@@ -32,39 +36,49 @@ function getRouters(dirPath) {
   return foundFiles;
 }
 
-function convertSep(pathString) {
-  let re = new RegExp("\\\\", 'g');
-  return pathString.replace(re, "/");
-}
-
 module.exports = function(routesPath) {
 
   let files = getRouters(routesPath);
-  let importRoot = path.join(appRoot, routesPath);
+  let importRoot = path.join(appRoot, routesPath) + '/';
   let indexRouters = {};
 
-  files.sort((item)=> (item.indexOf(path.sep+'index.js')<0) );
+  let indexs   = files.filter(i => ((i.indexOf('/index.js') > -1) || (i == 'index.js') )).sort( (a,b) => (a.length - b.length) )
+  let subFiles = files.filter(i => ((i.indexOf('/index.js') == -1) && (i != 'index.js') )).sort( (a,b) => (a.length - b.length) )
 
-  for (let file of files) {
+  for (let file of indexs) {
+    let subRouter    = require(importRoot + file);
+    let parentRouter = router;
+    let fileInfo     = path.parse(file);
+    let fileDir      = fileInfo.dir || '/';
 
-    let fileInfo  = path.parse(file);
-    fileInfo.dir  = convertSep(fileInfo.dir);
+    let fileParent = path.dirname(fileDir);
+    let routePath  = '/'+path.basename(fileDir) || '/';
 
-    let routePath = (fileInfo.name == "index") ?
-      fileInfo.dir :
-      fileInfo.dir + '/' + fileInfo.name;
+    if (fileParent == '.') fileParent = "/";
 
-    if (routePath[0] != "/")
-      routePath = '/'+ routePath;
-
-    if (indexRouters[fileInfo.dir]) {
-      indexRouters[fileInfo.dir].use('/'+fileInfo.name, require(importRoot+"/"+file));
-    } else {
-      let subRouter = require(importRoot+"/"+file);
-      indexRouters[fileInfo.dir] = subRouter;
-      router.use(routePath, subRouter);
+    if (indexRouters[fileParent]) {
+      parentRouter = indexRouters[fileParent];
     }
 
+    parentRouter.use(routePath, subRouter);
+    indexRouters[fileDir] = subRouter;
   }
+
+  for (let file of subFiles) {
+    let subRouter    = require(importRoot + file);
+    let parentRouter = router;
+    let fileInfo     = path.parse(file);
+    let fileDir      = fileInfo.dir || '/';
+
+    let fileParent = fileDir;
+    let routePath  = '/'+fileInfo.name || '/';
+
+    if (indexRouters[fileParent]) {
+      parentRouter = indexRouters[fileParent];
+    }
+
+    parentRouter.use(routePath, subRouter);
+  }
+
   return router;
 }
